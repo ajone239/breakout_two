@@ -40,6 +40,8 @@ function setup() {
     updateables = [ball]
     collidables = [paddle, right_wall, left_wall, top_wall, bot_wall]
 
+    makeBricks()
+
 }
 
 function draw() {
@@ -72,6 +74,31 @@ function draw() {
         text("Game over", width / 2, height / 2)
     }
     */
+}
+
+function makeBricks() {
+    const vert_count = 5
+    const horz_count = 8
+    for (var i = 0; i < horz_count; i++) {
+        for (var j = 0; j < vert_count; j++) {
+            let x_margin = width * (1 / 60);
+            let x_width = width * (5 / 60);
+            let x_gap = width * (1 / 30);
+
+            let y_margin = height * (3 / 30);
+            let y_height = height * (1 / 45);
+            let y_gap = height * (1 / 45);
+
+            var b = new Brick(
+                x_margin + (x_width * i) + (x_gap * i),
+                y_margin + (y_height * j) + (y_gap * j),
+                x_width,
+                y_height,
+                bricks
+            )
+            bricks.push(b)
+        }
+    }
 }
 
 function handleInteraction(x, y) {
