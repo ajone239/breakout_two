@@ -19,12 +19,13 @@ class Ball {
     }
 
     check_collision(obj) {
-        var [horz, vert] = obj.is_in_bounds(
-            this.pos_x - this.r,
-            this.pos_x + this.r,
-            this.pos_y - this.r,
-            this.pos_y + this.r
-        )
+        const left = this.pos_x - this.r
+        const right = this.pos_x + this.r
+        const up = this.pos_y - this.r
+        const down = this.pos_y + this.r
+
+        var [horz, vert] = obj.is_in_bounds(left, right, up, down)
+
         if (horz || vert) {
             this.collide(horz, vert)
             obj.collide(horz, vert)
