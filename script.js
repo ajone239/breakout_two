@@ -25,7 +25,7 @@ function setup() {
     top_wall = new Rectangle(-10, height * (1 / 15), width + 10, 5)
     bot_wall = new Rectangle(-10, height - 5, width + 10, 5)
 
-    ball = new Ball(15)
+    ball = new Ball(8)
 
     paddle = new Rectangle(
         width * (1 / 2),
@@ -36,12 +36,11 @@ function setup() {
 
     walls = [right_wall, left_wall, top_wall, bot_wall]
 
-    showables = [ball, paddle, right_wall, left_wall, top_wall, bot_wall]
+    showables = [paddle, ball, right_wall, left_wall, top_wall, bot_wall]
     updateables = [ball]
     collidables = [paddle, right_wall, left_wall, top_wall, bot_wall]
 
     makeBricks()
-
 }
 
 function draw() {

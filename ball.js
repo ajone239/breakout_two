@@ -6,16 +6,28 @@ class Ball {
         this.pos_y = height / 2
         this.vel_x = 3
         this.vel_y = 3
+
+        this.until_check
     }
 
     update() {
         this.pos_x += this.vel_x
         this.pos_y += this.vel_y
+
+        this.until_check -= 1
     }
 
     collide(horz, vert) {
-        if (horz) this.vel_x *= -1
-        if (vert) this.vel_y *= -1
+        if (this.until_check > 0) return
+
+        if (horz) {
+            this.vel_x *= -1
+            this.until_check = 10
+        }
+        if (vert) {
+            this.vel_y *= -1
+            this.until_check = 10
+        }
     }
 
     check_collision(obj) {
@@ -26,7 +38,10 @@ class Ball {
 
         var [horz, vert] = obj.is_in_bounds(left, right, up, down)
 
+
         if (horz || vert) {
+            console.log(horz, vert)
+
             this.collide(horz, vert)
             obj.collide(horz, vert)
 
@@ -36,7 +51,7 @@ class Ball {
     }
 
     show() {
-        ellipse(this.pos_x, this.pos_y, this.r)
+        circle(this.pos_x, this.pos_y, this.r * 2)
     }
 }
 
