@@ -4,8 +4,8 @@ class Ball {
 
         this.pos_x = width / 2
         this.pos_y = height / 2
-        this.vel_x = 3
-        this.vel_y = 3
+        this.vel_x = 5
+        this.vel_y = 5
 
         this.until_check
     }
@@ -22,11 +22,11 @@ class Ball {
 
         if (horz) {
             this.vel_x *= -1
-            this.until_check = 10
+            this.until_check = 5
         }
         if (vert) {
             this.vel_y *= -1
-            this.until_check = 10
+            this.until_check = 5
         }
     }
 
@@ -40,8 +40,6 @@ class Ball {
 
 
         if (horz || vert) {
-            console.log(horz, vert)
-
             this.collide(horz, vert)
             obj.collide(horz, vert)
 

@@ -16,14 +16,30 @@ let showables
 let updateables
 let collidables
 
+let lives = 0
+let gaming
 
 function setup() {
     createCanvas(document.body.clientWidth, document.body.clientHeight);
 
-    left_wall = new Rectangle(0, -10, 5, height + 20)
-    right_wall = new Rectangle(width - 5, -10, 5, height + 20)
+    left_wall = new Rectangle(-10, -10, 10, height + 20)
+    right_wall = new Rectangle(width, -10, 10, height + 20)
     top_wall = new Rectangle(-10, height * (1 / 15), width + 10, 5)
-    bot_wall = new Rectangle(-10, height - 5, width + 10, 5)
+    bot_wall = new Rectangle(
+        -10,
+        height,
+        width + 10,
+        10,
+        () => {
+            lives -= 1
+            noLoop()
+            gaming = false
+
+            if (isGameOver()) {
+                loseText()
+            }
+        }
+    )
 
     ball = new Ball(8)
 
@@ -40,6 +56,10 @@ function setup() {
     updateables = [ball]
     collidables = [paddle, right_wall, left_wall, top_wall, bot_wall]
 
+    score = 0
+    lives = 3
+    gaming = false
+
     makeBricks()
 }
 
@@ -49,6 +69,9 @@ function draw() {
     // title
     textAlign(CENTER, CENTER);
     text("Breakout", width / 2, 20);
+
+    text(`Lives: ${lives}`, 1 * width / 4, 20);
+    text(`Score: ${score}`, 3 * width / 4, 20);
 
     // handle touches
     if (touches.length == 1 || touches.length == 2) {
@@ -67,22 +90,45 @@ function draw() {
         s.show()
     }
 
-    /*
     if (bricks.length == 0) {
         noLoop()
-        text("Game over", width / 2, height / 2)
+        gaming = false
+        winText()
     }
-    */
+}
+
+function isGameOver() {
+    return bricks.length == 0 || lives <= 0
+}
+
+function winText() {
+    push()
+    textSize(40)
+    fill("white")
+    stroke("black")
+    strokeWeight(4);
+    text("You Win!", width / 2, height / 2)
+    pop()
+}
+
+function loseText() {
+    push()
+    textSize(40)
+    fill("white")
+    stroke("black")
+    strokeWeight(4);
+    text("You Lose :(", width / 2, height / 2)
+    pop()
 }
 
 function makeBricks() {
-    const vert_count = 5
+    const vert_count = 4
     const horz_count = 8
     for (var i = 0; i < horz_count; i++) {
         for (var j = 0; j < vert_count; j++) {
-            let x_margin = width * (1 / 60);
-            let x_width = width * (5 / 60);
-            let x_gap = width * (1 / 30);
+            let x_margin = width * (1 / (horz_count * 2 + 1));
+            let x_width = width * (1 / (horz_count * 2 + 1));
+            let x_gap = width * (1 / (horz_count * 2 + 1));
 
             let y_margin = height * (3 / 30);
             let y_height = height * (1 / 45);
@@ -93,7 +139,8 @@ function makeBricks() {
                 y_margin + (y_height * j) + (y_gap * j),
                 x_width,
                 y_height,
-                bricks
+                bricks,
+                () => { score += 100 }
             )
             bricks.push(b)
         }
@@ -101,8 +148,21 @@ function makeBricks() {
 }
 
 function handleInteraction(x, y) {
-    _ = y
-    paddle.x = x - (paddle.w / 2);
+    if (gaming) {
+        _ = y
+        paddle.x = x - (paddle.w / 2);
+        return
+    }
+
+    if (isGameOver()) {
+        setup()
+    } else {
+        ball.pos_x = width / 2
+        ball.pos_y = height / 2
+    }
+
+    loop()
+    gaming = true
 }
 
 function mousePressed() {

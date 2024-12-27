@@ -1,9 +1,11 @@
 class Rectangle {
-    constructor(x, y, w, h) {
+    constructor(x, y, w, h, onCollide = () => { }) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+
+        this.onCollide = onCollide
 
         this.update_shape()
     }
@@ -28,7 +30,9 @@ class Rectangle {
         return [horz, vert]
     }
 
-    collide() { }
+    collide() {
+        this.onCollide()
+    }
 
     update_shape() {
         this.top_left = new Point(this.x, this.y);
