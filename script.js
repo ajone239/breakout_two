@@ -30,15 +30,7 @@ function setup() {
         height,
         width + 10,
         10,
-        () => {
-            lives -= 1
-            noLoop()
-            gaming = false
-
-            if (isGameOver()) {
-                loseText()
-            }
-        }
+        lostBall
     )
 
     ball = new Ball(8)
@@ -63,6 +55,22 @@ function setup() {
     makeBricks()
 }
 
+function lostBall() {
+    lives -= 1;
+    noLoop();
+    gaming = false;
+
+    if (isGameOver()) {
+        loseText();
+        return;
+    }
+
+    ball.pos_x = width / 2
+    ball.pos_y = height / 2
+
+    ball.show()
+}
+
 function draw() {
     background("pink");
 
@@ -83,6 +91,17 @@ function draw() {
     for (var c of collidables.concat(bricks)) {
         ball.check_collision(c)
     }
+
+    if (
+        ball.pos_x < 0 ||
+        ball.pos_y < 0 ||
+        ball.pos_x > width ||
+        ball.pos_y > height
+    ) {
+        lostBall()
+    }
+
+
     for (var u of updateables) {
         u.update()
     }
